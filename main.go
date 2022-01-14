@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/consul/command/version"
 	"github.com/hashicorp/consul/lib"
 	_ "github.com/hashicorp/consul/service_os"
+	cliversion "github.com/hashicorp/consul/version"
 )
 
 func init() {
@@ -56,14 +57,16 @@ func realMain() int {
 				return false, err
 			}
 
-			pluginPath := filepath.Join(home, ".consul", "plugins", fmt.Sprintf("consul-%s", args[0]))
+			pluginBinary := fmt.Sprintf("consul-%s", args[0])
+			pluginPath := filepath.Join(home, ".consul", "plugins", pluginBinary)
 			_, err = os.Stat(pluginPath)
 			if err != nil {
 				return false, err
 			}
 
 			env := os.Environ()
-			execErr := syscall.Exec(pluginPath, args[1:], env)
+			env = append(env, fmt.Sprintf("CONSUL_CLI_VERSION=%s", cliversion.Version))
+			execErr := syscall.Exec(pluginPath, append([]string{pluginBinary}, args[1:]...), env)
 			if execErr != nil {
 				return false, err
 			}
