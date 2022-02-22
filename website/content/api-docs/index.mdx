@@ -89,6 +89,9 @@ even if Consul considers the resource name valid, it may degrade other functiona
 such as failed [DNS lookups](/docs/discovery/dns)
 for nodes or services with names containing invalid DNS characters.
 
+This HTTP API capability also allows the
+[CLI to accept arguments with URL-invalid characters](/commands#accepts-url-invalid-characters).
+
 ### Exceptions: Characters that are Always Invalid
 
 The inclusion of certain characters in a URL resource name will cause a request

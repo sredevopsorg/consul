@@ -254,3 +254,19 @@ products that support Enterprise namespaces.
 ```
 CONSUL_NAMESPACE=default
 ```
+
+## Accepts URL-Invalid Characters
+
+Many CLI commands use Consul HTTP API endpoints that require resource names in the request URL.
+To enable the CLI to interact with resources containing characters that are invalid in a URL
+path segment, the CLI will URL-encode parameters to be included in the HTTP API path,
+and then the [HTTP API endpoint will URL-decode those parameters](/api-docs#accepts-url-encoded-resource-names).
+
+Though any HTTP API resource name *can* be used with the CLI
+([with a few exceptions](/api-docs#exceptions-characters-that-are-always-invalid)),
+we typically recommend using resource names that don't require URL-encoding anyways.
+Depending on the validation that Consul applies to a resource name, Consul may still
+reject a request if it considers the resource name invalid for that endpoint. And
+even if Consul considers the resource name valid, it may degrade other functionality,
+such as failed [DNS lookups](/docs/discovery/dns)
+for nodes or services with names containing invalid DNS characters.
