@@ -44,6 +44,9 @@ are not supported from commands, but may be from the corresponding HTTP endpoint
 
 Usage: `consul force-leave [options] node`
 
+`node` can [contain URL-invalid characters](/commands#accepts-url-invalid-characters),
+though this is not a recommended practice for node names.
+
 #### API Options
 
 @include 'http_api_options_client.mdx'
