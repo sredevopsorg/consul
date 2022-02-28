@@ -2,20 +2,20 @@
 layout: api
 page_title: Consistency Modes
 description: >-
-  Most of the read query endpoints support multiple levels of consistency. Since
-  no policy will suit all clients' needs, these consistency modes allow the user
-  to have the ultimate say in how to balance the trade-offs inherent in a
-  distributed system.
+  Consistency modes allow consumers of the Consul HTTP API to make trade-offs
+  according to their needs between the level of consistency and performance
+  of read requests.
 ---
 
 # Consistency Modes
 
-Most of the read query endpoints support multiple levels of consistency. Since
-no policy will suit all clients' needs, these consistency modes allow the user
-to have the ultimate say in how to balance the trade-offs inherent in a
-distributed system.
+Consistency modes allow consumers of the Consul HTTP API to make trade-offs
+according to their needs between the level of consistency and performance
+of read requests.
 
-The three read modes are:
+## Available Modes
+
+Each HTTP API endpoint documents its support for the three read consistency modes:
 
 - `default` - If not specified, the default is strongly consistent in almost all
   cases. However, there is a small window in which a new leader may be elected
@@ -37,15 +37,53 @@ The three read modes are:
   values. Since this mode allows reads without a leader, a cluster that is
   unavailable will still be able to respond to queries.
 
-To switch these modes, either the `stale` or `consistent` query parameters
-should be provided on requests. It is an error to provide both.
+  ~> **Scaling read requests**: horizontally scaling Consul servers under
+  heavy request load will only help if many of the requests are `stale` reads.
+  This is because `stale` reads are the only requests that can be handled by
+  server agents other than the leader. Other requests will always be handled
+  by the leader no matter the number of Consul servers.
+  Only `stale` requests benefit from the enhanced read scalability provided by
+  [read replicas](/docs/enterprise/read-scale) and
+  [redundancy zones](/docs/enterprise/redundancy).
 
-Note that some endpoints support a `cached` parameter which has some of the same
-semantics as `stale` but different trade offs. This behavior is described in
-[agent caching feature documentation](/api/features/caching).
+The following diagrams show how the request path varies per consistency mode and
+the relative trade-offs between level of consistency and performance.
+
+<Tabs>
+<Tab heading="Stale reads">
+
+[![stale consistency mode read request path](/img/consistency-modes/consistency-mode-stale.png)](/img/consistency-modes/consistency-mode-stale.png)
+
+</Tab>
+
+<Tab heading="Default reads">
+
+[![default consistency mode read request path](/img/consistency-modes/consistency-mode-default.png)](/img/consistency-modes/consistency-mode-default.png)
+
+</Tab>
+<Tab heading="Consistent reads, all writes">
+
+[![consistent consistency mode read, any write request path](/img/consistency-modes/consistency-mode-consistent.png)](/img/consistency-modes/consistency-mode-consistent.png)
+
+</Tab>
+</Tabs>
+
+## Usage
+
+All read requests use the `default` consistency mode unless overridden.
+To specify a different consistency mode, include the desired consistency mode
+—`stale` or `consistent`—as a query parameter in the request.
+
+### Visibility into Response Staleness
 
 To support bounding the acceptable staleness of data, responses provide the
 `X-Consul-LastContact` header containing the time in milliseconds that a server
 was last contacted by the leader node. The `X-Consul-KnownLeader` header also
 indicates if there is a known leader. These can be used by clients to gauge the
 staleness of a result and take appropriate action.
+
+### Relationship to Request Caching
+
+Note that some HTTP API endpoints support a `cached` parameter which has some of the same
+semantics as `stale` consistency mode but different trade offs. This behavior is described in
+[agent caching feature documentation](/api/features/caching).
