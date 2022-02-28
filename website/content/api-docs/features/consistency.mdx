@@ -46,8 +46,11 @@ Each HTTP API endpoint documents its support for the three read consistency mode
   [read replicas](/docs/enterprise/read-scale) and
   [redundancy zones](/docs/enterprise/redundancy).
 
-The following diagrams show how the request path varies per consistency mode and
-the relative trade-offs between level of consistency and performance.
+
+### Intra-Datacenter Request Behavior
+
+The following diagrams show how the intra-datacenter request path varies
+per consistency mode and the relative trade-offs between level of consistency and performance.
 
 <Tabs>
 <Tab heading="Stale reads">
@@ -67,6 +70,14 @@ the relative trade-offs between level of consistency and performance.
 
 </Tab>
 </Tabs>
+
+### Cross-Datacenter Request Behavior
+
+When making a request across federated Consul datacenters, requests are forwarded from
+a local server to any remote server. Once in the remote datecenter, the request path
+is the same as a [local request with the same consistency mode](#intra-datacenter-request-behavior).
+
+[![consistency mode behavior across Consul datacenters](/img/consistency-modes/consistency-mode-cross-datacenter.png)](/img/consistency-modes/consistency-mode-cross-datacenter.png)
 
 ## Usage
 
