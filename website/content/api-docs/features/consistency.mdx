@@ -81,9 +81,46 @@ is the same as a [local request with the same consistency mode](#intra-datacente
 
 ## Usage
 
-All read requests use the `default` consistency mode unless overridden.
-To specify a different consistency mode, include the desired consistency mode
-—`stale` or `consistent`—as a query parameter in the request.
+### Consistency Mode Defaults and Overriding
+
+#### Consul DNS Queries
+
+When DNS queries are issued to [Consul's DNS interface](/docs/discovery/dns),
+Consul uses the `stale` consistency mode by default when interfacing with the
+underlying Consul service discovery HTTP APIs
+([catalog](/api-docs/catalog), [health](/api-docs/health), and [query](/api-docs/query)).
+To set an upper limit on how stale results are allowed to be,
+specify [`dns_config.max_stale`](/docs/agent/options#max_stale)
+in the configuration of the Consul agent serving DNS queries.
+
+If stronger consistency is required at the expense of increased latency,
+set [`dns_config.allow_stale`](/docs/agent/options#allow_stale) to `false`
+to make Consul use the `default` consistency mode when interfacing with the
+underlying Consul service discovery HTTP APIs.
+
+The consistency mode underlying Consul DNS queries cannot be overridden on a
+per-request basis.
+
+#### Consul HTTP API Queries
+
+All HTTP API read requests use the `default` consistency mode by default
+unless overridden on a per-request basis.
+
+Only the service discovery HTTP API endpoints
+([catalog](/api-docs/catalog), [health](/api-docs/health), and [query](/api-docs/query))
+allow changing the consistency mode used by default. By setting
+[`discovery_max_stale`](/docs/agent/options#discovery_max_stale)
+to a value greater than zero in the configuration of the Consul agent receiving requests,
+the `stale` consistency mode will be used by default unless the data is sufficiently stale.
+Setting a positive value for [`discovery_max_stale`](/docs/agent/options#discovery_max_stale)
+is analogous to changing the default consistency mode for
+[Consul DNS queries](#consul-dns-queries) by setting [`dns_config.max_stale`](/docs/agent/options#max_stale).
+
+The HTTP API documentation for each endpoint lists which consistency modes can be used
+to override the default on a per-request basis. To use a supported consistency mode
+other than `default` for a request,
+include the desired consistency mode—`stale` or `consistent`—as a
+query parameter in the request.
 
 ### Visibility into Response Staleness
 
