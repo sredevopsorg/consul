@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/consul/sdk/testutil/retry"
 
 	msgpackrpc "github.com/hashicorp/consul-net-rpc/net-rpc-msgpackrpc"
+	"github.com/hashicorp/consul/sdk/testutil/retry"
 	"github.com/hashicorp/raft"
 	"github.com/stretchr/testify/require"
 
