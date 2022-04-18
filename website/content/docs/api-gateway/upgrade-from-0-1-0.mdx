@@ -16,7 +16,7 @@ description: >-
 This guide explains how to best upgrade a consul-api-gateway deployment that is currently
 running v0.1.0 to all future versions. v0.2.0 introduced a breaking change that
 causes routes defined with a BackendRef defined in a different namespace to
-require a (ReferencePolicy)[https://gateway-api.sigs.k8s.io/v1alpha2/references/spec/#gateway.networking.k8s.io/v1alpha2.ReferencePolicy]
+require a [ReferencePolicy](https://gateway-api.sigs.k8s.io/v1alpha2/references/spec/#gateway.networking.k8s.io/v1alpha2.ReferencePolicy)
 that explicitly allows traffic from the routes namespace to the backendrefs namespace.
 
 
