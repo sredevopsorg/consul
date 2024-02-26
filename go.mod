@@ -95,7 +95,7 @@ require (
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/shirou/gopsutil/v3 v3.22.8
 	github.com/stretchr/testify v1.8.3
-	go.etcd.io/bbolt v1.3.7
+	go.etcd.io/bbolt v1.3.9
 	go.opentelemetry.io/otel v1.16.0
 	go.opentelemetry.io/otel/metric v1.16.0
 	go.opentelemetry.io/otel/sdk v1.16.0
@@ -106,7 +106,7 @@ require (
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
 	golang.org/x/net v0.10.0
 	golang.org/x/oauth2 v0.6.0
-	golang.org/x/sync v0.2.0
+	golang.org/x/sync v0.5.0
 	golang.org/x/sys v0.8.0
 	golang.org/x/time v0.3.0
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
